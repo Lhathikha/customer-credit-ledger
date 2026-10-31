@@ -1,0 +1,10 @@
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { formatMoney } from "../lib/format.js";
+import { TableCard } from "./DataTable.jsx";
+
+export default function DashboardCharts({ monthly }) {
+  return <div className="dashboard-charts">
+    <TableCard title="Monthly sales" subtitle="Invoiced amount · outstanding · payments"><div className="chart-wrap"><ResponsiveContainer width="100%" height="100%"><AreaChart data={monthly} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}><defs><linearGradient id="salesFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5068e8" stopOpacity={0.22} /><stop offset="100%" stopColor="#5068e8" stopOpacity={0} /></linearGradient></defs><CartesianGrid stroke="#edf0f5" vertical={false} /><XAxis dataKey="month" axisLine={false} tickLine={false} /><YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `₹${Math.round(value / 1000)}k`} /><Tooltip formatter={(value) => formatMoney(value)} /><Area type="monotone" dataKey="sales" name="Sales" stroke="#5068e8" strokeWidth={2.5} fill="url(#salesFill)" /><Area type="monotone" dataKey="outstanding" name="Outstanding" stroke="#e9a23b" strokeWidth={2} fill="transparent" /><Area type="monotone" dataKey="payments" name="Payments" stroke="#16a37b" strokeWidth={2} fill="transparent" /></AreaChart></ResponsiveContainer></div></TableCard>
+    <TableCard title="Credit utilization" subtitle="Historical portfolio exposure vs. current limits"><div className="chart-wrap"><ResponsiveContainer width="100%" height="100%"><AreaChart data={monthly} margin={{ top: 10, right: 10, left: -12, bottom: 0 }}><CartesianGrid stroke="#edf0f5" vertical={false} /><XAxis dataKey="month" axisLine={false} tickLine={false} /><YAxis domain={[0, 100]} axisLine={false} tickLine={false} tickFormatter={(value) => `${value}%`} /><Tooltip formatter={(value) => `${Number(value).toFixed(1)}%`} /><Area type="monotone" dataKey="utilizationPercent" name="Utilization" stroke="#805ad5" strokeWidth={2.5} fill="#ede9fe" /></AreaChart></ResponsiveContainer></div></TableCard>
+  </div>;
+}
